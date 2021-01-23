@@ -7,8 +7,8 @@ fn main() {
     }
 
     println!(".intel_syntax noprefix");
-    println!(".globl main");
-    println!("main:");
+    println!(".globl _main");
+    println!("_main:");
     println!("  mov rax, {}", &args[1].parse::<i32>().expect("Not a number"));
     println!("  ret");
 }
