@@ -12,13 +12,29 @@ fn main() {
     println!(".intel_syntax noprefix");
     println!(".globl _main");
     println!("_main:");
-    println!("  mov rax, {}", &args[1].parse::<i32>().expect("Not a number"));
-    println!("  ret");
 
-    let mut lexer = Lexer::new(" 5 + 7 - 40");
+    let mut lexer = Lexer::new(&args[1]);
+
+    lexer.lex();
+    println!("  mov rax, {}", lexer.token.parse::<i64>().expect("Not a number"));
+
     while lexer.lex() {
-        println!("{}", lexer.token);
+        match lexer.token {
+            "+" => {
+                lexer.lex();
+                println!("  add rax, {}", lexer.token.parse::<i64>().expect("Not a number"));
+            },
+            "-" => {
+                lexer.lex();
+                println!("  sub rax, {}", lexer.token.parse::<i64>().expect("Not a number"));
+            },
+            _ => {
+                panic!("Unexpected token");
+            }
+        }
     }
+
+    println!("  ret");
 }
 struct Lexer<'a> {
     pub line: &'a str,
